@@ -22,6 +22,15 @@ connectDB()
 app.use(express.static(path.join(__dirname, '..', 'client', 'public')))
 
 // Routes
+// Extra CORS headers (explicit) - ensure deployed servers return required CORS headers
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*')
+	res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+	if (req.method === 'OPTIONS') return res.sendStatus(200)
+	next()
+})
+
 app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/products', require('./routes/productRoutes'))
 app.use('/api/orders', require('./routes/orderRoutes'))
