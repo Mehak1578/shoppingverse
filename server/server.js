@@ -37,20 +37,8 @@ app.use('/api/orders', require('./routes/orderRoutes'))
 
 app.get('/', (req, res) => res.json({ message: 'Welcome to Shopverse API' }))
 
-// Start the server with a safe port fallback when the desired port is in use
-const startServer = (port) => {
-	const server = app.listen(port, () => console.log(`Server running on port ${port}`))
-
-	server.on('error', (err) => {
-		if (err && err.code === 'EADDRINUSE') {
-			console.error(`Port ${port} is in use, trying ${port + 1}...`)
-			setTimeout(() => startServer(port + 1), 200)
-		} else {
-			console.error('Server error:', err)
-			process.exit(1)
-		}
-	})
-}
-
-const PORT = Number(process.env.PORT) || 5000
-startServer(PORT)
+// Start server on the port provided by Render (or 5000 for local dev)
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+	console.log(`Server running on port ${PORT}`)
+})
